@@ -1,40 +1,59 @@
 import React from "react"
-import {Link} from "react-router-dom"
-import * as ROUTES from "../../constants/routes"
+import { Link } from "react-router-dom"
+import * as ROUTES from "constants/routes"
+import * as ROLES from "constants/roles"
+import SignOutButton from "components/SignOut"
+import authContext from "components/Session/AuthContext"
 
 
 
-const Navigation = () => (
-    <div>
+const NavigationAuth = ({authUser}:any) => {
+
+    return(
         <ul>
             <li>
-                <Link to={ROUTES.SIGN_IN}>
-                    Sign In
-                </Link>
+                <Link to={ROUTES.LANDING}>Landing</Link>
             </li>
             <li>
-                <Link to={ROUTES.LANDING}>
-                    Landing
-                </Link>
+                <Link to={ROUTES.HOME}>Home</Link>
             </li>
             <li>
-                <Link to={ROUTES.HOME}>
-                    Home
-                </Link>
+                <Link to={ROUTES.ACCOUNT}>Account</Link>
             </li>
+            {
+                authUser.roles[ROLES.ADMIN] && 
+                <li>
+                    <Link to={ROUTES.ADMIN}>Admin</Link>
+                </li>
+            }
             <li>
-                <Link to={ROUTES.ACCOUNT}>
-                    Account
-                </Link>
-            </li>
-            <li>
-                <Link to={ROUTES.ADMIN}>
-                    Admin
-                </Link>
+                <SignOutButton />
             </li>
         </ul>
-    </div>
-)
+    )
+};
+
+
+const NavigationNonAuth = () => (
+    <ul>
+        <li>
+            <Link to={ROUTES.LANDING}>Landing</Link>
+        </li>
+        <li>
+            <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+        </li>
+    </ul>
+);
+
+const Navigation= () => {
+    const {authUser} = React.useContext(authContext)
+    
+    return(
+        <div>
+            {authUser !== null ? <NavigationAuth authUser={authUser} /> : <NavigationNonAuth/>}
+        </div>
+    )
+}
 
 
 export default Navigation
